@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function Page() {
-  return <h1> WELCOME AFTER ALL THIS TIME</h1>;
+  return <h1> This is the root</h1>;
 }
