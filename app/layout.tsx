@@ -1,3 +1,4 @@
+import "./globals.css";
 import Logo from "./components/Logo";
 import Navigation from "./components/page";
 
