@@ -1,6 +1,6 @@
 import "./globals.css";
-import Logo from "./components/Logo";
-import Navigation from "./components/page";
+import Logo from "./_components/Logo";
+import Navigation from "./_components/page";
 
 export const metadata = {
   title: "Wild oasis",

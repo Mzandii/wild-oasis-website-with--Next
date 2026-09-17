@@ -1,5 +1,5 @@
 import { z } from "zod";
-import Counter from "../components/Counter";
+import Counter from "../_components/Counter";
 
 const UserSchema = z.object({
   id: z.number(),

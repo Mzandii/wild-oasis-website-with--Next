@@ -10,7 +10,7 @@ const Counter = ({ data }) => {
       {
         <ul>
           {data.map((el) => (
-            <li key={el.id}>{el.name}</li>
+            <li key={el.id}>{el.id}</li>
           ))}
         </ul>
       }

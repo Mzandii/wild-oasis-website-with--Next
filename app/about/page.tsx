@@ -1,4 +1,4 @@
-import Navigation from "../components/page";
+import Navigation from "../_components/page";
 
 export default function About() {
   return (
