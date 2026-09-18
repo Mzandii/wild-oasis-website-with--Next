@@ -1,4 +1,6 @@
-import Navigation from "../_components/page";
+export const metadata = {
+  title: "account",
+};
 
 export default function Account() {
   return (
