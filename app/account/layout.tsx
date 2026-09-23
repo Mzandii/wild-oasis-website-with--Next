@@ -1,26 +1,12 @@
-export default function Navigation() {
+import SideNavigation from "../_components/SideNavigation";
+
+function Layout({ children }) {
   return (
-    <nav className="z-10 text-xl">
-      <ul className="flex gap-16 items-center">
-        <li>
-          <a href="/cabins" className="hover:text-accent-400 transition-colors">
-            Cabins
-          </a>
-        </li>
-        <li>
-          <a href="/about" className="hover:text-accent-400 transition-colors">
-            About
-          </a>
-        </li>
-        <li>
-          <a
-            href="/account"
-            className="hover:text-accent-400 transition-colors"
-          >
-            Guest area
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <div className="grid grid-cols-[16rem_1fr] h-full gap-12">
+      <SideNavigation />
+      <div> {children}</div>
+    </div>
   );
 }
+
+export default Layout;
