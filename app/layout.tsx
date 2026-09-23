@@ -1,6 +1,5 @@
+import Image from "next/image";
 import "@/app/_styles/globals.css";
-import Logo from "@/app/_components/Logo";
-import Navigation from "@/app/_components/Navigation";
 import { Josefin_Sans } from "next/font/google";
 import Header from "./_components/Header";
 
@@ -22,7 +21,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${josefin.className} bg-primary-950 text-primary-100 min-h-screen flex flex-col antialiased`}
+        className={`${josefin.className} bg-primary-950 text-primary-100 min-h-screen flex flex-col antialiased relative`}
       >
         <Header />
         <div className="flex-1 px-8 py-12">
