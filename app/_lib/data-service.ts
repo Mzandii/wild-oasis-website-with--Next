@@ -23,7 +23,7 @@ export const CabinPriceSchema = z.object({
 
 export const GuestSchema = z.object({
   id: z.number(),
-  email: z.string().email(),
+  email: z.email(),
   fullName: z.string(),
   nationalID: z.string().optional().nullable(),
   nationality: z.string().optional().nullable(),
@@ -60,9 +60,13 @@ export const SettingsSchema = z.object({
   breakfastPrice: z.number(),
 });
 
-export const CountrySchema = z.object({
-  name: z.string(),
-  flag: z.string(),
+const CountrySchema = z.object({
+  name: z.object({ common: z.string(), official: z.string() }),
+  cca2: z.string(),
+  capital: z.array(z.string()).optional(),
+  region: z.string(),
+  population: z.number(),
+  flags: z.object({ png: z.string(), svg: z.string() }),
 });
 
 export const NewGuestSchema = GuestSchema.omit({
@@ -275,21 +279,43 @@ export async function getSettings(): Promise<Settings> {
   return parsed.data;
 }
 
-export async function getCountries(): Promise<Country[]> {
-  try {
-    const res = await fetch(
-      "https://restcountries.com/v2/all?fields=name,flag",
-    );
-    const countries = await res.json();
+// ============================================
+// FETCH
+// ============================================
 
-    const parsed = z.array(CountrySchema).safeParse(countries);
+export async function getCountries(): Promise<Country[]> {
+  const apiKey = process.env.NEXT_PUBLIC_REST_COUNTRIES_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("Missing REST Countries API key");
+  }
+
+  try {
+    const response = await fetch(
+      "https://api.restcountries.com/countries/v5?q=canada",
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    const parsed = z.array(CountrySchema).safeParse(data);
+
     if (!parsed.success) {
       console.error("Invalid countries data:", parsed.error.flatten());
       throw new Error("Countries data is invalid");
     }
 
     return parsed.data;
-  } catch {
+  } catch (err) {
+    console.error("Failed to fetch countries:", err);
     throw new Error("Could not fetch countries");
   }
 }
