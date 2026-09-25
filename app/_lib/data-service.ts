@@ -1,6 +1,6 @@
 import { eachDayOfInterval } from "date-fns";
 import { z } from "zod";
-import { supabase } from "./supabase"; // adjust path as needed
+import { supabase } from "./supabase";
 
 /////////////
 // ZOD SCHEMAS
@@ -113,6 +113,7 @@ export async function getCabin(id: number): Promise<Cabin | null> {
   }
 
   const parsed = CabinSchema.safeParse(data);
+
   if (!parsed.success) {
     console.error("Invalid cabin data:", parsed.error.flatten());
     return null;
@@ -284,7 +285,7 @@ export async function getSettings(): Promise<Settings> {
 // ============================================
 
 export async function getCountries(): Promise<Country[]> {
-  const apiKey = process.env.NEXT_PUBLIC_REST_COUNTRIES_API_KEY;
+  const apiKey = process.env.REST_COUNTRIES_API_KEY;
 
   if (!apiKey) {
     throw new Error("Missing REST Countries API key");
