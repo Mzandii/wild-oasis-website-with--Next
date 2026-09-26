@@ -1,13 +1,18 @@
-import Image from "next/image";
 import "@/app/_styles/globals.css";
 import { Josefin_Sans } from "next/font/google";
 import Header from "./_components/Header";
 
+//=====================================
+// FONT
+//=====================================
 const josefin = Josefin_Sans({
   subsets: ["latin"],
   display: "swap",
 });
 
+//=====================================
+// Metadata
+//=====================================
 export const metadata = {
   title: {
     default: "Welcome | The Wild Oasis",

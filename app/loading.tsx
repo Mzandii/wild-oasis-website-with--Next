@@ -1,7 +1,9 @@
+import { BeatLoader } from "react-spinners";
+
 export default function Loading() {
   return (
     <div>
-      <p>Loading ....</p>
+      <BeatLoader />
     </div>
   );
 }
