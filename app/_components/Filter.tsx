@@ -28,7 +28,7 @@ function FilterInner({ filterField, defaultValue, options }: FilterProps) {
   }
 
   return (
-    <div className="flex w-full justify-end gap-1 bg-transparent p-1">
+    <div className="flex w-full justify-end gap-1 bg-transparent p-1 my-10">
       {options.map((option) => {
         const active = currentFilter === option.value;
         return (
@@ -50,10 +50,6 @@ function FilterInner({ filterField, defaultValue, options }: FilterProps) {
   );
 }
 
-const Filter = (props: FilterProps) => (
-  <Suspense fallback={null}>
-    <FilterInner {...props} />
-  </Suspense>
-);
+const Filter = (props: FilterProps) => <FilterInner {...props} />;
 
 export default Filter;
