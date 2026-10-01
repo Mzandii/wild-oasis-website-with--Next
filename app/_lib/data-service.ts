@@ -1,6 +1,7 @@
 import { eachDayOfInterval } from "date-fns";
 import { z } from "zod";
 import { supabase } from "./supabase";
+import { notFound } from "next/navigation";
 
 /////////////
 // ZOD SCHEMAS
@@ -108,8 +109,8 @@ export async function getCabin(id: number): Promise<Cabin | null> {
     .single();
 
   if (error) {
-    console.error(error);
-    return null;
+    console.log(error);
+    notFound();
   }
 
   const parsed = CabinSchema.safeParse(data);
@@ -230,7 +231,7 @@ export async function getBookings(guestId: number): Promise<Booking[]> {
 export async function getBookedDatesByCabinId(
   cabinId: number,
 ): Promise<Date[]> {
-  let today = new Date();
+  const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   const todayStr = today.toISOString();
 
