@@ -45,6 +45,7 @@ export default function Page() {
         <Image
           src="/about-2.jpg"
           fill
+          sizes="(max-width: 1024px) 100vw, 40vw"
           className="object-cover"
           alt="Family that manages The Wild Oasis"
         />

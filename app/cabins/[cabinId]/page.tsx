@@ -1,4 +1,4 @@
-import { getCabin } from "@/app/_lib/data-service";
+import { getCabin, getCabins } from "@/app/_lib/data-service";
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import type { Cabin } from "@/app/_lib/data-service";
@@ -10,12 +10,16 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps) {
   const { cabinId } = await params;
   const cabin = await getCabin(cabinId);
-
   const { name } = cabin as Cabin;
-
   return {
     title: `cabin ${name}`,
   };
+}
+
+export async function generateStaticParams() {
+  const cabins = await getCabins();
+  const ids = cabins.map((el) => ({ cabinId: String(el.id) }));
+  return ids;
 }
 
 export default async function Page({ params }: PageProps) {
