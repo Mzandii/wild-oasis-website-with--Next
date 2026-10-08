@@ -2,6 +2,7 @@ import { eachDayOfInterval } from "date-fns";
 import { z } from "zod";
 import { supabase } from "./supabase";
 import { notFound } from "next/navigation";
+import { cacheLife, cacheTag } from "next/cache";
 
 /////////////
 // ZOD SCHEMAS
@@ -102,6 +103,8 @@ export type UpdateBooking = z.infer<typeof UpdateBookingSchema>;
 // GET
 
 export async function getCabin(id: number): Promise<Cabin | null> {
+  "use cache";
+  cacheLife("hours");
   const { data, error } = await supabase
     .from("cabins")
     .select("*")
@@ -145,6 +148,10 @@ export async function getCabinPrice(id: number): Promise<CabinPrice | null> {
 }
 
 export const getCabins = async function (): Promise<Cabin[]> {
+  "use cache";
+  cacheLife({ stale: 3600, revalidate: 7200, expire: 86400 });
+  cacheTag("cabins");
+
   const { data, error } = await supabase
     .from("cabins")
     .select("id, name, maxCapacity, regularPrice, discount, image")

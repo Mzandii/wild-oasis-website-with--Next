@@ -1,4 +1,3 @@
-import { BarLoader } from "react-spinners";
 import Spinner from "../_components/Spinner";
 
 export default function Loading() {

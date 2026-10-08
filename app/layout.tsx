@@ -1,19 +1,12 @@
 import "@/app/_styles/globals.css";
 import { Josefin_Sans } from "next/font/google";
 import Header from "./_components/Header";
-import { Geist } from "next/font/google";
 import { type ReactNode } from "react";
 
-//=====================================
-// FONT
-//=====================================
 const josefin = Josefin_Sans({
   subsets: ["latin"],
   display: "swap",
 });
-//=====================================
-// Metadata
-//=====================================
 export const metadata = {
   title: {
     default: "Welcome | The Wild Oasis",
@@ -22,7 +15,6 @@ export const metadata = {
   description:
     "A hotel with luxurious accomodation welcoming guests from all over the world.",
 };
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">

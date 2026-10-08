@@ -7,6 +7,7 @@ function Logo() {
     <Link href="/" className="flex items-center gap-4 z-10">
       <Image
         src={logo}
+        preload
         alt="The Wild Oasis logo"
         height="60"
         width="60"

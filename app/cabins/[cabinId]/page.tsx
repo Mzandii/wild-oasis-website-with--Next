@@ -2,6 +2,7 @@ import { getCabin, getCabins } from "@/app/_lib/data-service";
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import type { Cabin } from "@/app/_lib/data-service";
+import { notFound } from "next/navigation";
 
 type PageProps = {
   params: Promise<{ cabinId: number }>;
@@ -9,7 +10,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps) {
   const { cabinId } = await params;
-  const cabin = await getCabin(cabinId);
+  const cabin = await getCabin(Number(cabinId));
   const { name } = cabin as Cabin;
   return {
     title: `cabin ${name}`,
@@ -25,9 +26,13 @@ export async function generateStaticParams() {
 export default async function Page({ params }: PageProps) {
   const { cabinId } = await params;
   const cabin = await getCabin(cabinId);
+  if (!cabin) notFound();
 
-  const { id, name, maxCapacity, regularPrice, discount, image, description } =
+  const { name, maxCapacity, regularPrice, discount, image, description } =
     cabin as Cabin;
+
+  const discountAmount = regularPrice - discount;
+  const discountPercent = Math.round((discountAmount / regularPrice) * 100);
 
   return (
     <div className="max-w-6xl mx-auto mt-8">
@@ -42,7 +47,7 @@ export default async function Page({ params }: PageProps) {
         </div>
 
         <div>
-          <h3 className="text-accent-100 font-black text-7xl mb-5 translate-x-[-254px] bg-primary-950 p-6 pb-1 w-[150%]">
+          <h3 className="text-accent-100 font-black text-7xl mb-5 -translate-x-63.5 bg-primary-950 p-6 pb-1 w-[150%]">
             Cabin {name}
           </h3>
 
@@ -70,6 +75,28 @@ export default async function Page({ params }: PageProps) {
               </span>
             </li>
           </ul>
+
+          {/* ✅ Price + discount section */}
+          <div className="mt-8 flex items-center gap-4">
+            {discount > 0 ? (
+              <>
+                <p className="text-3xl font-bold text-accent-400">
+                  ${discount}
+                </p>
+                <p className="text-xl text-primary-400 line-through">
+                  ${regularPrice}
+                </p>
+                <span className="rounded-md bg-accent-500 px-3 py-1 text-sm font-semibold text-primary-900">
+                  Save {discountPercent}%
+                </span>
+              </>
+            ) : (
+              <p className="text-3xl font-bold text-accent-400">
+                ${regularPrice}
+              </p>
+            )}
+            <span className="text-primary-400">/ night</span>
+          </div>
         </div>
       </div>
 

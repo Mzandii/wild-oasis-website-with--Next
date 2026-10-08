@@ -8,13 +8,6 @@ type CabinListProps = {
 export default async function CabinList({ filter }: CabinListProps) {
   const cabins = await getCabins();
 
-  // const ids = cabins.reduce<number[]>((accu, el) => {
-  //   accu.push(el.id);
-  //   return accu;
-  // }, []);
-
-  // // [97, 1, 120, 119, 118, 91, 92, 111, 116]  console.log(ids)
-
   if (!cabins.length) return null;
 
   const filteredCabins =
