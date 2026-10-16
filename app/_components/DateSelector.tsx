@@ -1,9 +1,10 @@
 "use client";
 
 import { isWithinInterval } from "date-fns";
-import { useState } from "react";
 import { DayPicker, type DateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { useReservationContext } from "./ReservationContext";
+import type { Cabin, Settings } from "@/types"; // adjust path to your types
 
 function isAlreadyBooked(
   range: DateRange | undefined,
@@ -19,22 +20,31 @@ function isAlreadyBooked(
   );
 }
 
-function DateSelector({ settings, bookedDates, cabin }) {
-  const [range, setRange] = useState<DateRange>({
-    from: undefined,
-    to: undefined,
-  });
-  // CHANGE
-  const { regularPrice, discount, numNights, cabinPrice } = cabin;
+type DateSelectorProps = {
+  settings: Settings;
+  bookedDates: Date[];
+  cabin: Cabin;
+};
 
-  // const range: DateRange = { from: undefined, to: undefined };
+function DateSelector({ settings, bookedDates, cabin }: DateSelectorProps) {
+  const { range, setRange, resetRange } = useReservationContext();
+
+  const { regularPrice, discount } = cabin;
 
   // SETTINGS
   const { minBookingLength, maxBookingLength } = settings;
 
-  const resetRange = () => {
-    // Reset the selected date range here.
-  };
+  // Derived values — replace with your actual calculations
+  const numNights =
+    range?.from && range?.to
+      ? Math.round(
+          (range.to.getTime() - range.from.getTime()) / (1000 * 60 * 60 * 24),
+        )
+      : 0;
+
+  const cabinPrice = numNights * (regularPrice - discount);
+
+  const isBooked = isAlreadyBooked(range, bookedDates);
 
   return (
     <div className="flex flex-col justify-between">
@@ -50,6 +60,7 @@ function DateSelector({ settings, bookedDates, cabin }) {
         toYear={new Date().getFullYear() + 5}
         captionLayout="dropdown"
         numberOfMonths={1}
+        disabled={[{ before: new Date() }, ...bookedDates]}
       />
 
       <div className="flex items-center justify-between px-8 bg-accent-500 text-primary-800 h-[72px]">
@@ -83,7 +94,7 @@ function DateSelector({ settings, bookedDates, cabin }) {
           ) : null}
         </div>
 
-        {range.from || range.to ? (
+        {range?.from || range?.to ? (
           <button
             className="border border-primary-800 py-2 px-4 text-sm font-semibold"
             onClick={resetRange}

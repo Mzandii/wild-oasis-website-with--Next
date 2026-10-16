@@ -1,8 +1,10 @@
 "use client";
 
 import { Cabin } from "../_lib/data-service";
+import { useReservationContext } from "./ReservationContext";
 
 function ReservationForm({ cabin }: { cabin: Cabin }) {
+  //const { range } = useReservationContext() ;
   // CHANGE
   const { maxCapacity } = cabin;
 

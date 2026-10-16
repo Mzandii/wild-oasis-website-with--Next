@@ -35,7 +35,7 @@ export function ReservationProvider({
   );
 }
 
-export function useReservation() {
+export function useReservationContext() {
   const context = useContext(ReservationContext); // React 19 also offers use(ReservationContext)
   if (!context)
     throw new Error("useReservation was used outside ReservationProvider");
