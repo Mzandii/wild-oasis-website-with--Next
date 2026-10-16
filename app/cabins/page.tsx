@@ -8,11 +8,11 @@ export const metadata = {
 };
 
 type PageProps = {
-  searchParams: Promise<{ discount?: string }>;
+  searchParams: Promise<{ capacity?: string }>;
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const { discount } = await searchParams;
+  const { capacity: filter } = await searchParams;
 
   return (
     <div>
@@ -22,12 +22,13 @@ export default async function Page({ searchParams }: PageProps) {
 
       <Suspense>
         <Filter
-          filterField="discount"
+          filterField="capacity"
           defaultValue="all"
           options={[
             { value: "all", label: "All" },
-            { value: "with-discount", label: "With Discount" },
-            { value: "no-discount", label: "No Discount" },
+            { value: "small", label: "1–2 guests" },
+            { value: "medium", label: "3–7 guests" },
+            { value: "large", label: "+ guests" },
           ]}
         />
       </Suspense>
@@ -41,8 +42,8 @@ export default async function Page({ searchParams }: PageProps) {
         Welcome to paradise.
       </p>
 
-      <Suspense fallback={<Spinner />}>
-        <CabinList filter={discount} />
+      <Suspense fallback={<Spinner />} key={filter}>
+        <CabinList filter={filter} />
       </Suspense>
     </div>
   );

@@ -1,24 +1,41 @@
-import { getCountries } from '@/app/_lib/data-service';
+import { getCountries, type Country } from "@/app/_lib/data-service";
+import { JSX } from "react/jsx-runtime";
 
-// Let's imagine your colleague already built this component 😃
+interface SelectCountryProps {
+  defaultCountry?: string;
+  name: string;
+  id: string;
+  className?: string;
+}
 
-async function SelectCountry({ defaultCountry, name, id, className }) {
-  const countries = await getCountries();
-  const flag =
-    countries.find((country) => country.name === defaultCountry)?.flag ?? '';
+async function SelectCountry({
+  defaultCountry,
+  name,
+  id,
+  className,
+}: SelectCountryProps): Promise<JSX.Element> {
+  const countries: Country[] = await getCountries();
+
+  // Find the country matching defaultCountry by common name
+  const defaultMatch: Country | undefined = countries.find(
+    (c) => c.names.common === defaultCountry,
+  );
+  const flag: string = defaultMatch?.flag?.url_svg ?? "";
 
   return (
     <select
       name={name}
       id={id}
-      // Here we use a trick to encode BOTH the country name and the flag into the value. Then we split them up again later in the server action
-      defaultValue={`${defaultCountry}%${flag}`}
+      defaultValue={defaultCountry ? `${defaultCountry}%${flag}` : ""}
       className={className}
     >
-      <option value=''>Select country...</option>
+      <option value="">Select country...</option>
       {countries.map((c) => (
-        <option key={c.name} value={`${c.name}%${c.flag}`}>
-          {c.name}
+        <option
+          key={c.codes.alpha_2}
+          value={`${c.names.common}%${c.flag.url_svg}`}
+        >
+          {c.names.common}
         </option>
       ))}
     </select>

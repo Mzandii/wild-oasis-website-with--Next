@@ -3,6 +3,7 @@ import { z } from "zod";
 import { supabase } from "./supabase";
 import { notFound } from "next/navigation";
 import { cacheLife, cacheTag } from "next/cache";
+import { connection } from "next/server";
 
 /////////////
 // ZOD SCHEMAS
@@ -63,12 +64,22 @@ export const SettingsSchema = z.object({
 });
 
 const CountrySchema = z.object({
-  name: z.object({ common: z.string(), official: z.string() }),
-  cca2: z.string(),
-  capital: z.array(z.string()).optional(),
+  names: z.object({
+    common: z.string(),
+    official: z.string(),
+  }),
+  codes: z.object({
+    alpha_2: z.string(),
+    alpha_3: z.string(),
+  }),
+  capitals: z.array(z.object({ name: z.string() })).optional(),
   region: z.string(),
   population: z.number(),
-  flags: z.object({ png: z.string(), svg: z.string() }),
+  flag: z.object({
+    url_png: z.string(),
+    url_svg: z.string(),
+    emoji: z.string().optional(),
+  }),
 });
 
 export const NewGuestSchema = GuestSchema.omit({
@@ -105,6 +116,7 @@ export type UpdateBooking = z.infer<typeof UpdateBookingSchema>;
 export async function getCabin(id: number): Promise<Cabin | null> {
   "use cache";
   cacheLife("hours");
+
   const { data, error } = await supabase
     .from("cabins")
     .select("*")
@@ -238,6 +250,7 @@ export async function getBookings(guestId: number): Promise<Booking[]> {
 export async function getBookedDatesByCabinId(
   cabinId: number,
 ): Promise<Date[]> {
+  await connection();
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   const todayStr = today.toISOString();
@@ -291,38 +304,30 @@ export async function getSettings(): Promise<Settings> {
 // ============================================
 // FETCH
 // ============================================
-
 export async function getCountries(): Promise<Country[]> {
   const apiKey = process.env.REST_COUNTRIES_API_KEY;
-
-  if (!apiKey) {
-    throw new Error("Missing REST Countries API key");
-  }
+  if (!apiKey) throw new Error("Missing REST Countries API key");
 
   try {
-    const response = await fetch(
-      "https://api.restcountries.com/countries/v5?q=canada",
-      {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-      },
-    );
+    const response = await fetch("https://api.restcountries.com/countries/v5", {
+      headers: { Authorization: `Bearer ${apiKey}` },
+      // Optional: cache for 24h
+      next: { revalidate: 86400 },
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-
-    const parsed = z.array(CountrySchema).safeParse(data);
-
+    const json = await response.json();
+    const parsed = z.array(CountrySchema).safeParse(json.data.objects);
+    console.log(parsed.data);
     if (!parsed.success) {
       console.error("Invalid countries data:", parsed.error.flatten());
       throw new Error("Countries data is invalid");
     }
 
-    return parsed.data;
+    return parsed.data; // ✅ return parsed, not raw `data`
   } catch (err) {
     console.error("Failed to fetch countries:", err);
     throw new Error("Could not fetch countries");

@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
   experimental: {
     webpackMemoryOptimizations: true,
   },
+  reactCompiler: true,
+  allowedDevOrigins: ["192.168.1.4"],
 };
 
 export default nextConfig;

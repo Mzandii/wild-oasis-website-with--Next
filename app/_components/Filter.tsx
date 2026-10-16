@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 export type FilterOption = {
@@ -15,6 +15,7 @@ type FilterProps = {
 };
 
 function FilterInner({ filterField, defaultValue, options }: FilterProps) {
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -24,7 +25,9 @@ function FilterInner({ filterField, defaultValue, options }: FilterProps) {
   function handleClick(value: string) {
     const params = new URLSearchParams(searchParams.toString());
     params.set(filterField, value);
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    });
   }
 
   return (
@@ -40,7 +43,8 @@ function FilterInner({ filterField, defaultValue, options }: FilterProps) {
               active
                 ? "bg-indigo-600 text-indigo-50"
                 : "bg-transparent text-gray-700 hover:bg-indigo-600/10 hover:text-indigo-700"
-            }`}
+            }
+            ${isPending ? "bg-indigo-400" : ""}`}
           >
             {option.label}
           </button>
