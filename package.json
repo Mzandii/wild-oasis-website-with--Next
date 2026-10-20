@@ -11,13 +11,16 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.116.0",
+    "better-auth": "^1.7.11",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "next": "16.3.5",
+    "pg": "^8.23.1",
     "react": "19.2.8",
     "react-day-picker": "^10.0.2",
     "react-dom": "19.2.8",
     "react-spinners": "^0.17.1",
+    "server-only": "^0.0.1",
     "styled-components": "^6.5.3",
     "tailwind-merge": "^3.7.0",
     "zod": "^4.6.5"
@@ -25,6 +28,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "^1.0.0",
