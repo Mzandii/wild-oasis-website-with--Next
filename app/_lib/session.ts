@@ -1,9 +1,9 @@
 import "server-only";
 
 import { cache } from "react";
+import { auth } from "@/app/_lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "@/app/_lib/auth";
 
 export const getSession = cache(async () => {
   return auth.api.getSession({
@@ -13,6 +13,7 @@ export const getSession = cache(async () => {
 
 export async function requireUser() {
   const session = await getSession();
+  console.log("THIS IS IN THE SESSION.TS FILE:", session);
 
   if (!session) {
     redirect("/login");

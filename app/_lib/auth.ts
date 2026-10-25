@@ -5,6 +5,7 @@ import { nextCookies } from "better-auth/next-js";
 import { Pool } from "pg";
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL,
   database: new Pool({
     connectionString: process.env.DATABASE_URL!,
   }),
@@ -17,6 +18,7 @@ export const auth = betterAuth({
   },
 
   plugins: [nextCookies()],
+  session: { cookieCache: { enabled: true, maxAge: 5 * 60 } },
 });
 
 export type Session = typeof auth.$Infer.Session;
