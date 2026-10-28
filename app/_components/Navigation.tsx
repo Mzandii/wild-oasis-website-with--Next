@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { getSession } from "@/app/_lib/session";
+import { signOutAction } from "../_lib/actions";
 
 async function GuestArea() {
   const session = await getSession();

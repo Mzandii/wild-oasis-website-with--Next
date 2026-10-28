@@ -11,9 +11,8 @@ type Props = {
 };
 
 export default async function Page({ searchParams }: Props) {
-  const { next, error } = await searchParams; // must be awaited in Next 16
+  const { next, error } = await searchParams;
 
-  // Already signed in? Skip the login page.
   const session = await getSession();
   if (session) redirect(safeNext(next));
 
