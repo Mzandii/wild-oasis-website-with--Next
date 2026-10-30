@@ -1,11 +1,15 @@
+import { getCurrentGuest } from "../_lib/session";
+
 export const metadata = {
   title: "account",
 };
 
-export default function Account() {
+export default async function Account() {
+  const currentGuest = await getCurrentGuest();
+  console.log(currentGuest);
   return (
     <div>
-      <h1> main/account</h1>
+      <h1> Welcome, {currentGuest.fullName.split(" ").at(0)}</h1>
     </div>
   );
 }

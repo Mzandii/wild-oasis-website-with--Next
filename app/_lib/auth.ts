@@ -17,8 +17,25 @@ export const auth = betterAuth({
     },
   },
 
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          try {
+            const { ensureGuest } = await import("@/app/_lib/data-service");
+            const result = await ensureGuest({
+              email: user.email,
+              fullName: user.name,
+            });
+          } catch (error) {
+            console.error("Guest creation after sign-up failed:", error);
+          }
+        },
+      },
+    },
+  },
   plugins: [nextCookies()],
-  session: { cookieCache: { enabled: true, maxAge: 5 * 60 } },
+  session: { cookieCache: { enabled: true, maxAge: 30 * 60 } },
 });
 
 export type Session = typeof auth.$Infer.Session;

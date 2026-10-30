@@ -111,6 +111,7 @@ export type UpdateGuest = z.infer<typeof UpdateGuestSchema>;
 export type UpdateBooking = z.infer<typeof UpdateBookingSchema>;
 
 /////////////
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
 // GET
 
 export async function getCabin(id: number): Promise<Cabin | null> {
@@ -188,7 +189,7 @@ export async function getGuest(email: string): Promise<Guest | null> {
   const { data } = await supabase
     .from("guests")
     .select("*")
-    .eq("email", email)
+    .eq("email", normalizeEmail(email))
     .single();
 
   // No error here! We handle the possibility of no guest in the sign in callback
@@ -338,10 +339,16 @@ export async function getCountries(): Promise<Country[]> {
 // CREATE
 
 export async function createGuest(newGuest: NewGuest): Promise<Guest[]> {
-  // Validate input before sending to Supabase
-  const validated = NewGuestSchema.parse(newGuest);
+  const normalized = {
+    ...newGuest,
+    email: normalizeEmail(newGuest.email),
+  };
+  const validated = NewGuestSchema.parse(normalized);
 
-  const { data, error } = await supabase.from("guests").insert([validated]);
+  const { data, error } = await supabase
+    .from("guests")
+    .insert([validated])
+    .select();
 
   if (error) {
     console.error(error);
@@ -355,6 +362,19 @@ export async function createGuest(newGuest: NewGuest): Promise<Guest[]> {
   }
 
   return parsed.data;
+}
+
+export async function ensureGuest(input: NewGuest): Promise<Guest> {
+  const existing = await getGuest(input.email);
+  if (existing) return existing;
+
+  try {
+    return await createGuest(input);
+  } catch (err) {
+    const winner = await getGuest(input.email);
+    if (winner) return winner;
+    throw err;
+  }
 }
 
 export async function createBooking(newBooking: NewBooking): Promise<Booking> {

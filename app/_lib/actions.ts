@@ -18,7 +18,7 @@ export async function signInAction(formData: FormData) {
   });
 
   if (!url) redirect("/login?error=oauth");
-  redirect(url); // → github.com authorize page
+  redirect(url);
 }
 
 export async function signOutAction() {

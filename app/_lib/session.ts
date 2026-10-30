@@ -4,6 +4,7 @@ import { cache } from "react";
 import { auth } from "@/app/_lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { type Guest, ensureGuest } from "./data-service";
 
 export const getSession = cache(async () => {
   return auth.api.getSession({
@@ -13,7 +14,6 @@ export const getSession = cache(async () => {
 
 export async function requireUser() {
   const session = await getSession();
-  console.log("THIS IS IN THE SESSION.TS FILE:", session);
 
   if (!session) {
     redirect("/login");
@@ -22,18 +22,21 @@ export async function requireUser() {
   return session.user;
 }
 
-// {
-//   session: {
-//     id: "...",
-//     userId: "...",
-//     expiresAt: new Date(),
-//     // Other session fields
-//   },
-//   user: {
-//     id: "...",
-//     name: "...",
-//     email: "...",
-//     image: "...",
-//     // Other configured user fields
-//   }
-// }
+export const getCurrentGuest = cache(async (): Promise<Guest> => {
+  const session = await getSession();
+
+  if (!session?.user) {
+    redirect("/login?error=no_session");
+  }
+
+  const { user } = session;
+
+  if (!user.email) {
+    redirect("/login?error=email_not_found");
+  }
+  if (!user.emailVerified) {
+    redirect("/login?error=unverified_email");
+  }
+
+  return ensureGuest({ email: user.email, fullName: user.name });
+});
