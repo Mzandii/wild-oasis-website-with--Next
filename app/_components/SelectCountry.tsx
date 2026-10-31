@@ -16,7 +16,6 @@ async function SelectCountry({
 }: SelectCountryProps): Promise<JSX.Element> {
   const countries: Country[] = await getCountries();
 
-  // Find the country matching defaultCountry by common name
   const defaultMatch: Country | undefined = countries.find(
     (c) => c.names.common === defaultCountry,
   );

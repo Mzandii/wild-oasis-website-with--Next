@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
         hostname: "avatars.githubusercontent.com",
         pathname: "/u/**",
       },
+      { protocol: "https", hostname: "flagcdn.com" },
     ],
   },
   cacheComponents: true,

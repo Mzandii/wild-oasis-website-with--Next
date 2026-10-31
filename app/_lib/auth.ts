@@ -23,7 +23,7 @@ export const auth = betterAuth({
         after: async (user) => {
           try {
             const { ensureGuest } = await import("@/app/_lib/data-service");
-            const result = await ensureGuest({
+            await ensureGuest({
               email: user.email,
               fullName: user.name,
             });

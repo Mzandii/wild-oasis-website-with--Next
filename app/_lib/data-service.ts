@@ -328,7 +328,7 @@ export async function getCountries(): Promise<Country[]> {
       throw new Error("Countries data is invalid");
     }
 
-    return parsed.data; // ✅ return parsed, not raw `data`
+    return parsed.data;
   } catch (err) {
     console.error("Failed to fetch countries:", err);
     throw new Error("Could not fetch countries");
