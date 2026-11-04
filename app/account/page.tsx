@@ -6,7 +6,6 @@ export const metadata = {
 
 export default async function Account() {
   const currentGuest = await getCurrentGuest();
-  console.log(currentGuest);
   return (
     <div>
       <h1> Welcome, {currentGuest.fullName.split(" ").at(0)}</h1>

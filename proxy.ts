@@ -6,6 +6,7 @@ export function proxy(request: NextRequest) {
 
   if (!sessionCookie) {
     const loginUrl = new URL("/login", request.url);
+
     loginUrl.searchParams.set(
       "next",
       request.nextUrl.pathname + request.nextUrl.search,

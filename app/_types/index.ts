@@ -31,12 +31,12 @@ export type Booking = {
   endDate: string;
   numNights: number;
   numGuests: number;
-  cabinPrice: number;
-  extrasPrice: number;
+  cabinPrice?: number;
+  extrasPrice?: number;
   totalPrice: number;
   status: "unconfirmed" | "checked-in" | "checked-out";
-  hasBreakfast: boolean;
-  isPaid: boolean;
+  hasBreakfast?: boolean;
+  isPaid?: boolean;
   observations: string | null;
   cabinId: number;
   guestId: number;
