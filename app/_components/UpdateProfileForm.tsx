@@ -4,7 +4,7 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import SubmitButton from "@/app/_components/SubmitButton";
 import type { Guest } from "../_lib/data-service";
-import { updateGuestProfileAction } from "../_lib/updateGuestProfileAction";
+import { updateGuestProfileAction } from "../_lib/crudActions";
 
 const UpdateProfileForm = ({
   guest,

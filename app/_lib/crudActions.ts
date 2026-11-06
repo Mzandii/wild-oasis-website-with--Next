@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireGuest } from "./session";
 import { updateGuest as updateGuestInSupabase } from "./data-service";
+import { supabase } from "./supabase";
 
 const profileSchema = z.object({
   nationalID: z
@@ -39,4 +40,30 @@ export async function updateGuestProfileAction(
   });
 
   revalidatePath("/account/profile");
+}
+
+//DELETTE A BOOKING
+const bookingIdSchema = z.number().int().positive();
+
+export async function DeleteReservationAction({
+  bookingId,
+}: {
+  bookingId: number;
+}) {
+  const { guestId } = await requireGuest();
+  const id = bookingIdSchema.parse(bookingId);
+
+  const { data, error } = await supabase
+    .from("bookings")
+    .delete()
+    .eq("id", id)
+    .eq("guestId", guestId)
+    .gte("startDate", new Date().toISOString())
+    .select("id");
+
+  if (error) throw new Error("Booking could not be deleted");
+  if (!data?.length)
+    throw new Error("You are not allowed to delete this booking");
+
+  revalidatePath("/account/reservations");
 }
